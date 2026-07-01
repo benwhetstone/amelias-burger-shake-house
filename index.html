@@ -60,6 +60,29 @@
     font-size: clamp(13px, 3vw, 18px);
     font-weight: bold;
   }
+  /* Employee name badge — like a real crew member's tag */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px auto 0;
+    background: #fff;
+    border: 3px solid var(--yellow);
+    border-radius: 40px;
+    padding: 6px 16px 6px 10px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+  }
+  .badge .star { font-size: 26px; line-height: 1; }
+  .badge .who { text-align: left; line-height: 1.1; }
+  .badge .who small {
+    display: block;
+    color: var(--red);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+  .badge .who b { font-size: clamp(16px, 4vw, 20px); color: var(--dark); }
 
   .layout {
     display: flex;
@@ -276,6 +299,10 @@
   <header>
     <h1>🍔 Mickey D's Register 🍟</h1>
     <p>Tap the food to add it to the order!</p>
+    <div class="badge">
+      <span class="star">🌟</span>
+      <span class="who"><small>Crew Member</small><b>Amelia W.</b></span>
+    </div>
   </header>
 
   <div class="layout">
@@ -482,7 +509,7 @@
       '<div class="paid-box">Give back change:</div>' +
       '<div class="due"><span>' + money(change) + '</span></div>' +
       '<div style="font-size:60px;margin:6px 0">🍔🍟🥤</div>' +
-      '<div style="font-weight:bold;margin-bottom:12px">Thank you, come again! 😄</div>' +
+      '<div style="font-weight:bold;margin-bottom:12px">Great job, Amelia! Thank you, come again! 😄</div>' +
       '<button class="btn btn-done" id="new-order-btn">🆕 New Order</button>';
     $('new-order-btn').addEventListener('click', () => {
       for (const id in order) delete order[id];
