@@ -1,12 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#da291c"/>
-  <!-- Golden arches "M" -->
-  <path d="M104 400 V220 C104 150 150 120 190 120 C224 120 248 142 256 176
-           C264 142 288 120 322 120 C362 120 408 150 408 220 V400
-           H352 V236 C352 200 338 184 320 184 C300 184 288 204 288 240 V400
-           H224 V240 C224 204 212 184 192 184 C174 184 160 200 160 236 V400 Z"
-        fill="#ffc72c"/>
-  <!-- Little fries pocket accent -->
-  <text x="256" y="470" font-family="Arial, sans-serif" font-size="52" font-weight="bold"
-        fill="#ffffff" text-anchor="middle">🍟</text>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9a5a"/>
+      <stop offset="0.55" stop-color="#e8442c"/>
+      <stop offset="1" stop-color="#ff7eb0"/>
+    </linearGradient>
+    <linearGradient id="bun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f3b969"/>
+      <stop offset="1" stop-color="#e0964a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+
+  <!-- soft shadow under burger -->
+  <ellipse cx="256" cy="392" rx="150" ry="26" fill="rgba(0,0,0,0.15)"/>
+
+  <!-- top bun -->
+  <path d="M120 250 C120 150 392 150 392 250 Z" fill="url(#bun)"/>
+  <!-- sesame seeds -->
+  <g fill="#fff3d6">
+    <ellipse cx="200" cy="212" rx="9" ry="5" transform="rotate(-20 200 212)"/>
+    <ellipse cx="256" cy="196" rx="9" ry="5"/>
+    <ellipse cx="312" cy="212" rx="9" ry="5" transform="rotate(20 312 212)"/>
+    <ellipse cx="170" cy="238" rx="9" ry="5" transform="rotate(-30 170 238)"/>
+    <ellipse cx="342" cy="238" rx="9" ry="5" transform="rotate(30 342 238)"/>
+    <ellipse cx="256" cy="234" rx="9" ry="5"/>
+  </g>
+
+  <!-- lettuce -->
+  <path d="M110 250
+           q20 -22 38 0 q20 -22 40 0 q20 -22 40 0 q20 -22 40 0 q20 -22 40 0 q20 -22 38 0
+           l0 20 q-175 16 -276 0 Z" fill="#7cc24d"/>
+
+  <!-- cheese drips -->
+  <path d="M150 270 l60 0 l-14 40 Z" fill="#ffca3a"/>
+  <path d="M300 270 l62 0 l-16 44 Z" fill="#ffca3a"/>
+
+  <!-- patty -->
+  <rect x="140" y="272" width="232" height="34" rx="17" fill="#7a4a2f"/>
+
+  <!-- bottom bun -->
+  <rect x="138" y="304" width="236" height="52" rx="26" fill="url(#bun)"/>
 </svg>

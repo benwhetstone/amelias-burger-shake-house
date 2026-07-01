@@ -1,20 +1,28 @@
-# 🍔 Mickey D's Cash Register
+# 🍔 Amelia's Burger & Shake House
 
-A pretend fast-food cash register game for kids, built as a single HTML5 file — no installs, no internet needed to play.
+A pretend burger-shop cash register game for kids, built as a single HTML5 page — no installs needed. Designed for a pre-reader: real food photos, big number prices, sizes & combos to pick, and both cash and credit-card payment.
 
 ## How to play
-1. Open `index.html` in any web browser (double-click it).
+1. Open `index.html` in a web browser.
 2. Tap food on the **Menu** to add it to the order.
-3. Tap the **−** button on a line to remove one.
-4. Tap **💵 Take Payment**, then tap the bills and coins the "customer" hands over.
-5. When there's enough money, tap **✅ Ring It Up** to see the change and celebrate! 🎉
+   - Items with a **"choose ⭐"** tag (fries, drinks, nuggets, shakes, Kids Combo) open a picker for size / flavor / toy.
+3. Tap the **−** on a line to remove one.
+4. Tap **💵 Take Payment**, then choose **Cash** or **Card**:
+   - **Cash** — tap the bills/coins the customer hands over; it shows the change to give back.
+   - **Card** — tap the card on the reader and watch it get approved. 💳
+5. Celebrate, then start a **New Order**! 🎉
 
-## Play it online (GitHub Pages)
-After pushing to GitHub, go to the repo's **Settings → Pages**, set the source to the `main` branch, and your game will be live at:
+## Play it on an iPad (as an app)
+1. Open the live link in **Safari**.
+2. Tap **Share → Add to Home Screen**.
+3. Launch the burger icon — it runs fullscreen, no browser bars.
+
+## Live site
+Published with GitHub Pages:
 
 ```
-https://<your-username>.github.io/mcdonalds-cash-register/
+https://benwhetstone.github.io/amelias-burger-shake-house/
 ```
 
-## Notes
-This is a fun, unofficial toy for learning about money and making change. Not affiliated with McDonald's.
+## Image credits
+Food photos are freely-licensed images from **Wikimedia Commons** (Creative Commons / public domain). This is an unofficial, not-for-profit toy and is not affiliated with any restaurant brand.
