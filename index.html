@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>🍔 Mickey D's Cash Register 🍟</title>
+<style>
+  :root {
+    --red: #da291c;
+    --yellow: #ffc72c;
+    --green: #27ae60;
+    --dark: #292929;
+    --cream: #fff8e7;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Comic Sans MS", "Chalkboard SE", "Segoe UI", system-ui, sans-serif;
+    background: repeating-linear-gradient(135deg, #da291c 0 40px, #c0241a 40px 80px);
+    color: var(--dark);
+    min-height: 100vh;
+    user-select: none;
+  }
+
+  header {
+    text-align: center;
+    padding: 14px 10px 8px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: clamp(28px, 6vw, 48px);
+    color: var(--yellow);
+    text-shadow: 3px 3px 0 #7a1610, -1px -1px 0 #7a1610;
+    letter-spacing: 1px;
+  }
+  header p {
+    margin: 4px 0 0;
+    color: #fff;
+    font-size: clamp(13px, 3vw, 18px);
+    font-weight: bold;
+  }
+
+  .layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px 14px 30px;
+  }
+
+  .menu {
+    flex: 2 1 460px;
+    background: var(--cream);
+    border-radius: 22px;
+    padding: 16px;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.25);
+  }
+  .menu h2, .order h2 {
+    margin: 4px 6px 12px;
+    color: var(--red);
+    font-size: clamp(20px, 4vw, 28px);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+
+  .item {
+    border: none;
+    border-radius: 18px;
+    background: #fff;
+    padding: 12px 8px 10px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.18);
+    transition: transform .05s ease, box-shadow .05s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .item:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.18);
+  }
+  .item .emoji { font-size: clamp(38px, 9vw, 54px); line-height: 1; }
+  .item .name { font-weight: bold; font-size: 15px; }
+  .item .price { color: var(--green); font-weight: bold; font-size: 15px; }
+
+  .order {
+    flex: 1 1 300px;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 22px;
+    padding: 16px;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+  }
+  .order h2 { color: var(--yellow); }
+
+  #receipt {
+    background: #fff;
+    color: var(--dark);
+    border-radius: 12px;
+    padding: 10px 12px;
+    min-height: 150px;
+    max-height: 260px;
+    overflow-y: auto;
+    font-size: 16px;
+  }
+  .empty-note { color: #999; text-align: center; margin-top: 40px; font-style: italic; }
+
+  .line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px dashed #ddd;
+  }
+  .line .l-name { flex: 1; }
+  .line .l-qty {
+    background: var(--yellow);
+    border-radius: 20px;
+    padding: 1px 9px;
+    font-weight: bold;
+    margin: 0 8px;
+    font-size: 14px;
+  }
+  .line .l-price { font-weight: bold; min-width: 58px; text-align: right; }
+  .line .l-remove {
+    border: none;
+    background: var(--red);
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  .totals { margin-top: 12px; font-size: 18px; }
+  .totals .row { display: flex; justify-content: space-between; padding: 2px 4px; }
+  .totals .grand {
+    font-size: 26px;
+    font-weight: bold;
+    color: var(--yellow);
+    border-top: 3px solid var(--yellow);
+    margin-top: 6px;
+    padding-top: 8px;
+  }
+
+  .buttons { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .btn {
+    border: none;
+    border-radius: 16px;
+    padding: 14px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.3);
+    transition: transform .05s ease, box-shadow .05s ease;
+  }
+  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+  .btn-pay { background: var(--green); color: #fff; }
+  .btn-clear { background: #777; color: #fff; }
+
+  /* Pay screen */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 50;
+  }
+  .overlay.show { display: flex; }
+  .modal {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 22px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 0 rgba(0,0,0,0.4);
+  }
+  .modal h2 { color: var(--red); margin: 0 0 8px; font-size: 30px; }
+  .modal .due { font-size: 24px; margin: 6px 0 14px; font-weight: bold; }
+  .modal .due span { color: var(--green); }
+
+  .cash-label { font-weight: bold; margin-bottom: 8px; }
+  .cash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+  .cash-btn {
+    border: none;
+    border-radius: 14px;
+    background: #2e8b57;
+    color: #fff;
+    padding: 14px 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+  }
+  .cash-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+  .coin-btn { background: #b8860b; }
+
+  .paid-box { font-size: 20px; margin: 10px 0; }
+  .paid-box b { color: var(--green); }
+  .change-msg { font-size: 22px; font-weight: bold; margin: 12px 0; min-height: 30px; }
+
+  .modal .btn { width: 100%; margin-top: 6px; }
+  .btn-done { background: var(--yellow); color: var(--dark); }
+  .btn-reset { background: #777; color: #fff; }
+
+  /* celebration */
+  .stars {
+    font-size: 46px;
+    animation: pop .6s ease infinite alternate;
+  }
+  @keyframes pop { from { transform: scale(1);} to { transform: scale(1.25) rotate(6deg);} }
+
+  footer { text-align:center; color:#fff; opacity:.85; font-size:13px; padding: 4px 10px 20px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🍔 Mickey D's Register 🍟</h1>
+    <p>Tap the food to add it to the order!</p>
+  </header>
+
+  <div class="layout">
+    <section class="menu">
+      <h2>Menu</h2>
+      <div class="grid" id="menu-grid"></div>
+    </section>
+
+    <section class="order">
+      <h2>🧾 Your Order</h2>
+      <div id="receipt">
+        <div class="empty-note">No items yet.<br>Tap some yummy food! 😋</div>
+      </div>
+
+      <div class="totals">
+        <div class="row"><span>Items</span><span id="count">0</span></div>
+        <div class="row grand"><span>TOTAL</span><span id="total">$0.00</span></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-pay" id="pay-btn">💵 Take Payment</button>
+        <button class="btn btn-clear" id="clear-btn">🗑️ Clear Order</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Payment overlay -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div id="pay-stage">
+        <h2>💵 Payment Time!</h2>
+        <div class="due">Total due: <span id="due-amount">$0.00</span></div>
+        <div class="cash-label">Tap the money the customer hands you:</div>
+        <div class="cash-grid" id="cash-grid"></div>
+        <div class="paid-box">Cash given: <b id="paid-amount">$0.00</b></div>
+        <div class="change-msg" id="change-msg"></div>
+        <button class="btn btn-done" id="give-change-btn">✅ Ring It Up</button>
+        <button class="btn btn-reset" id="cancel-btn">↩️ Go Back</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>A pretend cash register — just for fun! 🎉</footer>
+
+<script>
+  // ---- Menu data ----
+  const MENU = [
+    { id: 'bigmac',  name: 'Big Mac',      emoji: '🍔', price: 5.99 },
+    { id: 'cheese',  name: 'Cheeseburger', emoji: '🧀', price: 2.49 },
+    { id: 'nuggets', name: 'Nuggets',      emoji: '🍗', price: 4.29 },
+    { id: 'fries',   name: 'Fries',        emoji: '🍟', price: 2.99 },
+    { id: 'happy',   name: 'Happy Meal',   emoji: '🎁', price: 6.49 },
+    { id: 'coke',    name: 'Soda',         emoji: '🥤', price: 1.99 },
+    { id: 'shake',   name: 'Shake',        emoji: '🥛', price: 3.49 },
+    { id: 'icecream',name: 'Ice Cream',    emoji: '🍦', price: 1.49 },
+    { id: 'pie',     name: 'Apple Pie',    emoji: '🥧', price: 1.29 },
+    { id: 'coffee',  name: 'Coffee',       emoji: '☕', price: 1.79 },
+    { id: 'salad',   name: 'Salad',        emoji: '🥗', price: 4.99 },
+    { id: 'cookie',  name: 'Cookie',       emoji: '🍪', price: 0.99 },
+  ];
+
+  const CASH = [
+    { label: '1¢',  value: 0.01, coin: true },
+    { label: '5¢',  value: 0.05, coin: true },
+    { label: '10¢', value: 0.10, coin: true },
+    { label: '25¢', value: 0.25, coin: true },
+    { label: '$1',  value: 1 },
+    { label: '$5',  value: 5 },
+    { label: '$10', value: 10 },
+    { label: '$20', value: 20 },
+    { label: '$50', value: 50 },
+  ];
+
+  // ---- State ----
+  const order = {}; // id -> qty
+  let paid = 0;
+
+  const $ = (id) => document.getElementById(id);
+  const money = (n) => '$' + n.toFixed(2);
+
+  // ---- Build menu ----
+  const menuGrid = $('menu-grid');
+  MENU.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'item';
+    btn.innerHTML =
+      '<span class="emoji">' + item.emoji + '</span>' +
+      '<span class="name">' + item.name + '</span>' +
+      '<span class="price">' + money(item.price) + '</span>';
+    btn.addEventListener('click', () => addItem(item.id));
+    menuGrid.appendChild(btn);
+  });
+
+  function addItem(id) {
+    order[id] = (order[id] || 0) + 1;
+    render();
+  }
+  function removeItem(id) {
+    if (!order[id]) return;
+    order[id]--;
+    if (order[id] <= 0) delete order[id];
+    render();
+  }
+
+  function orderTotal() {
+    let t = 0;
+    for (const id in order) {
+      const item = MENU.find(m => m.id === id);
+      t += item.price * order[id];
+    }
+    return t;
+  }
+  function itemCount() {
+    let c = 0;
+    for (const id in order) c += order[id];
+    return c;
+  }
+
+  function render() {
+    const receipt = $('receipt');
+    const ids = Object.keys(order);
+    if (ids.length === 0) {
+      receipt.innerHTML = '<div class="empty-note">No items yet.<br>Tap some yummy food! 😋</div>';
+    } else {
+      receipt.innerHTML = '';
+      ids.forEach(id => {
+        const item = MENU.find(m => m.id === id);
+        const qty = order[id];
+        const line = document.createElement('div');
+        line.className = 'line';
+        line.innerHTML =
+          '<span class="l-name">' + item.emoji + ' ' + item.name + '</span>' +
+          '<span class="l-qty">x' + qty + '</span>' +
+          '<span class="l-price">' + money(item.price * qty) + '</span>' +
+          '<button class="l-remove" title="remove one">−</button>';
+        line.querySelector('.l-remove').addEventListener('click', () => removeItem(id));
+        receipt.appendChild(line);
+      });
+    }
+    $('count').textContent = itemCount();
+    $('total').textContent = money(orderTotal());
+  }
+
+  // ---- Clear ----
+  $('clear-btn').addEventListener('click', () => {
+    for (const id in order) delete order[id];
+    render();
+  });
+
+  // ---- Payment flow ----
+  const overlay = $('overlay');
+  const cashGrid = $('cash-grid');
+
+  CASH.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cash-btn' + (c.coin ? ' coin-btn' : '');
+    b.textContent = c.label;
+    b.addEventListener('click', () => addCash(c.value));
+    cashGrid.appendChild(b);
+  });
+
+  $('pay-btn').addEventListener('click', () => {
+    if (itemCount() === 0) {
+      alert('Add some food to the order first! 🍔');
+      return;
+    }
+    paid = 0;
+    $('due-amount').textContent = money(orderTotal());
+    $('paid-amount').textContent = money(0);
+    $('change-msg').textContent = '';
+    overlay.classList.add('show');
+  });
+
+  function addCash(v) {
+    paid = Math.round((paid + v) * 100) / 100;
+    $('paid-amount').textContent = money(paid);
+    const due = orderTotal();
+    if (paid >= due) {
+      $('change-msg').innerHTML = '👍 Enough money! Ready to ring it up.';
+      $('change-msg').style.color = '#27ae60';
+    } else {
+      $('change-msg').innerHTML = 'Need ' + money(due - paid) + ' more…';
+      $('change-msg').style.color = '#da291c';
+    }
+  }
+
+  $('give-change-btn').addEventListener('click', () => {
+    const due = orderTotal();
+    if (paid < due) {
+      $('change-msg').innerHTML = '❌ Not enough money yet — need ' + money(due - paid) + ' more!';
+      $('change-msg').style.color = '#da291c';
+      return;
+    }
+    const change = Math.round((paid - due) * 100) / 100;
+    showSuccess(change);
+  });
+
+  function showSuccess(change) {
+    const stage = $('pay-stage');
+    stage.innerHTML =
+      '<div class="stars">🎉⭐🎉</div>' +
+      '<h2>Order Complete!</h2>' +
+      '<div class="paid-box">Give back change:</div>' +
+      '<div class="due"><span>' + money(change) + '</span></div>' +
+      '<div style="font-size:60px;margin:6px 0">🍔🍟🥤</div>' +
+      '<div style="font-weight:bold;margin-bottom:12px">Thank you, come again! 😄</div>' +
+      '<button class="btn btn-done" id="new-order-btn">🆕 New Order</button>';
+    $('new-order-btn').addEventListener('click', () => {
+      for (const id in order) delete order[id];
+      render();
+      overlay.classList.remove('show');
+      resetStage();
+    });
+  }
+
+  function resetStage() {
+    const stage = $('pay-stage');
+    stage.innerHTML =
+      '<h2>💵 Payment Time!</h2>' +
+      '<div class="due">Total due: <span id="due-amount">$0.00</span></div>' +
+      '<div class="cash-label">Tap the money the customer hands you:</div>' +
+      '<div class="cash-grid" id="cash-grid"></div>' +
+      '<div class="paid-box">Cash given: <b id="paid-amount">$0.00</b></div>' +
+      '<div class="change-msg" id="change-msg"></div>' +
+      '<button class="btn btn-done" id="give-change-btn">✅ Ring It Up</button>' +
+      '<button class="btn btn-reset" id="cancel-btn">↩️ Go Back</button>';
+    // rewire the freshly-created elements
+    const newGrid = $('cash-grid');
+    CASH.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'cash-btn' + (c.coin ? ' coin-btn' : '');
+      b.textContent = c.label;
+      b.addEventListener('click', () => addCash(c.value));
+      newGrid.appendChild(b);
+    });
+    $('give-change-btn').addEventListener('click', () => {
+      const due = orderTotal();
+      if (paid < due) {
+        $('change-msg').innerHTML = '❌ Not enough money yet — need ' + money(due - paid) + ' more!';
+        $('change-msg').style.color = '#da291c';
+        return;
+      }
+      showSuccess(Math.round((paid - due) * 100) / 100);
+    });
+    $('cancel-btn').addEventListener('click', () => overlay.classList.remove('show'));
+  }
+
+  $('cancel-btn').addEventListener('click', () => overlay.classList.remove('show'));
+
+  // ---- Start ----
+  render();
+</script>
+</body>
+</html>

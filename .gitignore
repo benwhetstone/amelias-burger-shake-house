@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Google Drive junk
+*.gdoc
+*.gsheet
+*.gslides
+
+# Editor
+.vscode/
+.idea/
