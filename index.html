@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<!-- iPad / iPhone "Add to Home Screen" web-app settings -->
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Register" />
+<meta name="theme-color" content="#da291c" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon.png" />
 <title>🍔 Mickey D's Cash Register 🍟</title>
 <style>
   :root {
@@ -20,10 +28,20 @@
     padding: 0;
     font-family: "Comic Sans MS", "Chalkboard SE", "Segoe UI", system-ui, sans-serif;
     background: repeating-linear-gradient(135deg, #da291c 0 40px, #c0241a 40px 80px);
+    background-attachment: fixed;
     color: var(--dark);
     min-height: 100vh;
     user-select: none;
+    -webkit-user-select: none;
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior: none;
+    /* Keep content clear of the iPad camera notch and home indicator */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+             env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
+  /* Stop the whole-page rubber-band bounce so taps feel like a real app */
+  body { touch-action: manipulation; }
+  button { touch-action: manipulation; }
 
   header {
     text-align: center;

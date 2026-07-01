@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#da291c"/>
+  <!-- Golden arches "M" -->
+  <path d="M104 400 V220 C104 150 150 120 190 120 C224 120 248 142 256 176
+           C264 142 288 120 322 120 C362 120 408 150 408 220 V400
+           H352 V236 C352 200 338 184 320 184 C300 184 288 204 288 240 V400
+           H224 V240 C224 204 212 184 192 184 C174 184 160 200 160 236 V400 Z"
+        fill="#ffc72c"/>
+  <!-- Little fries pocket accent -->
+  <text x="256" y="470" font-family="Arial, sans-serif" font-size="52" font-weight="bold"
+        fill="#ffffff" text-anchor="middle">🍟</text>
+</svg>
